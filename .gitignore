@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+data/raw/*
+data/processed/*
+data/splits/*
+results/*
+external/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/splits/.gitkeep
+!results/.gitkeep
+!external/.gitkeep
+*.pt
+*.pkl

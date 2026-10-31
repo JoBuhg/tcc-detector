@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tccdet"
+version = "0.1.0"
+description = "TCC: generalização de uma CNN na detecção de imagens geradas por IA"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy", "pandas", "pyyaml", "pillow", "scikit-learn", "tqdm",
+  "torch", "torchvision",
+]
+
+[project.optional-dependencies]
+generate = ["diffusers", "transformers", "accelerate", "safetensors", "pytorch-pretrained-biggan", "nltk"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

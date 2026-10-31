@@ -1,0 +1,12 @@
+# Teste de fumaça com dados falsos (CPU, rápido)
+extends: experiment.yaml
+categories: [cat, car, horse]
+paths: {raw: data/raw, processed: data/processed, splits: data/splits, results: results}
+preprocess: {size: 64}
+train:
+  pretrained: false
+  batch_size: 16
+  num_workers: 0
+  phase1: {epochs: 1, lr: 1.0e-3}
+  phase2: {max_epochs: 2, lr: 1.0e-4, patience: 1}
+eval: {bootstrap: 50}

@@ -1,0 +1,48 @@
+# Configuração principal do experimento (escala MVP / TCC-I).
+# Para a escala final do TCC-II, aumente n_per_category e seeds.
+seed: 42
+generators_file: generators.yaml
+categories: [cat, car, horse]
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  splits: data/splits
+  results: results
+
+generation:
+  n_per_category: 80        # por gerador. MVP: ~80 (x3 categorias = 240/gerador)
+  batch_size: 8
+  prompt_style: "a realistic photograph"
+
+real:
+  n_per_category: 320       # >= (nº de geradores x generation.n_per_category): 4 x 80
+  # Onde estão as reais de origem: categoria -> lista de pastas (relativas a real.source_dir)
+  source_dir: /kaggle/input/imagenet-object-localization-challenge/ILSVRC/Data/CLS-LOC/train
+  sources:
+    cat:   [n02123045, n02123159, n02123394]   # tabby, tiger cat, Persian (wnids ImageNet)
+    car:   [n04285008, n03100240, n02814533]   # sports car, convertible, beach wagon
+    horse: [n02389026]                         # sorrel
+
+preprocess:
+  size: 224                 # lado final (recorte central quadrado + resize)
+  jpeg_quality: 95          # igual para TODAS as imagens
+  jpeg_subsampling: 0
+  dedup_hamming: 2          # distância máxima (dHash 64 bits) para considerar duplicata
+
+split:
+  protocol: fixed           # fixed | logo (leave-one-generator-out)
+  ratios: [0.70, 0.15, 0.15]
+
+train:
+  pretrained: true
+  batch_size: 32
+  num_workers: 2
+  phase1: {epochs: 3, lr: 1.0e-3}                 # só a camada final
+  phase2: {max_epochs: 20, lr: 1.0e-4, patience: 3}  # layer4 + fc
+  hflip: true
+  threshold: 0.5
+  seeds: [0]                # TCC-II: [0, 1, 2, 3, 4]
+
+eval:
+  bootstrap: 1000
