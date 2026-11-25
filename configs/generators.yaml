@@ -1,48 +1,22 @@
-# Geradores do experimento. status: seen (treino/val/Teste A) | unseen (Teste B).
-# ATENÇÃO: confira versões, licenças e termos de uso antes de gerar em massa.
+# Geradores COMERCIAIS GRATUITOS, usados por geração MANUAL (sem código de geração).
+# status: seen (treino/validação/Teste A) | unseen (Teste B).
+# Caminho A (TCC-I): 3 geradores. Para incluir o Ideogram no TCC-II, acrescente um bloco igual (kind: manual).
+# Os nomes abaixo são as pastas em data/inbox/<gerador>/<categoria>/ e data/raw/.
+# Confira, antes de gerar, quais ferramentas gratuitas estão disponíveis e seus termos de uso.
+# Para voltar aos modelos abertos (Stable Diffusion, StyleGAN2, BigGAN...), use generators_open.yaml.
 generators:
-  stylegan2:
-    family: gan
+  chatgpt:
+    family: comercial
     status: seen
-    kind: stylegan2
-    repo_dir: external/stylegan2-ada-pytorch   # git clone NVlabs/stylegan2-ada-pytorch
-    # categoria -> caminho/URL do .pkl. PREENCHER após conferir quais checkpoints existem.
-    # Se uma categoria não tiver checkpoint, TROQUE a categoria (ou o gerador).
-    checkpoints:
-      cat: null
-      car: null
-      horse: null
-    truncation_psi: 0.7
-
-  sd15:
-    family: diffusion
+    kind: manual
+    tool: "ChatGPT (OpenAI), plano gratuito"
+  gemini:
+    family: comercial
     status: seen
-    kind: diffusers
-    model_id: stable-diffusion-v1-5/stable-diffusion-v1-5
-    steps: 30
-    guidance: 7.5
-    height: 512
-    width: 512
-    disable_safety_checker: true
-
-  biggan:
-    family: gan
+    kind: manual
+    tool: "Gemini (Nano Banana), plano gratuito"
+  copilot:
+    family: comercial
     status: unseen
-    kind: biggan
-    model_id: biggan-deep-256
-    truncation: 0.5
-    classes:             # índices de classe da ImageNet (conferir)
-      cat: [281, 282, 283, 285]
-      car: [817, 511, 436]
-      horse: [339, 603]
-
-  sdxl_turbo:
-    family: diffusion
-    status: unseen
-    kind: diffusers
-    model_id: stabilityai/sdxl-turbo
-    steps: 1
-    guidance: 0.0
-    height: 512
-    width: 512
-    disable_safety_checker: false
+    kind: manual
+    tool: "Microsoft Copilot, gratuito"

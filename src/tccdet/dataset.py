@@ -14,16 +14,20 @@ def make_tf(train: bool, hflip: bool, size: int):
 
 
 class ImageCSV(Dataset):
-    def __init__(self, csv, train=False, hflip=True, size=None):
+    def __init__(self, csv, train=False, hflip=True, size=None, pre=None):
         self.df = pd.read_csv(csv) if isinstance(csv, str) else csv
         self.tf = make_tf(train, hflip, size)
+        self.pre = pre
 
     def __len__(self):
         return len(self.df)
 
     def __getitem__(self, i):
         r = self.df.iloc[i]
-        return self.tf(Image.open(r.path).convert("RGB")), torch.tensor(float(r.label))
+        img = Image.open(r.path).convert("RGB")
+        if self.pre is not None:
+            img = self.pre(img)
+        return self.tf(img), torch.tensor(float(r.label))
 
 
 def loader(csv, bs, train, workers=0, hflip=True, size=None):

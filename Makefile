@@ -6,6 +6,12 @@ setup:
 	pip install -e ".[generate,dev]"
 test:
 	pytest -q
+prompts:    # cria a lista de prompts para a geração manual
+	python -m tccdet.manual prompts --config $(CONFIG)
+ingest:     # organiza data/inbox em data/raw e registra
+	python -m tccdet.manual ingest --config $(CONFIG)
+status:
+	python -m tccdet.manual status --config $(CONFIG)
 real:
 	python -m tccdet.collect_real --config $(CONFIG)
 generate:   # make generate G=sd15
@@ -20,6 +26,8 @@ train:
 	python -m tccdet.train --config $(CONFIG) --split $(SPLIT) --seed $(SEED)
 eval:
 	python -m tccdet.evaluate --config $(CONFIG) --split $(SPLIT) --seed $(SEED)
+robustness:
+	python -m tccdet.robustness --config $(CONFIG) --split $(SPLIT) --seed $(SEED)
 aggregate:
 	python -m tccdet.aggregate --config $(CONFIG) --split $(SPLIT)
 smoke:      # pipeline completo com dados falsos (não usa GPU)

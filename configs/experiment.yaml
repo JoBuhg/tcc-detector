@@ -2,7 +2,7 @@
 # Para a escala final do TCC-II, aumente n_per_category e seeds.
 seed: 42
 generators_file: generators.yaml
-categories: [cat, car, horse]
+categories: [cat]            # TCC-I: uma categoria (gatos). TCC-II: cat, car, horse + 2
 
 paths:
   raw: data/raw
@@ -11,18 +11,21 @@ paths:
   results: results
 
 generation:
-  n_per_category: 80        # por gerador. MVP: ~80 (x3 categorias = 240/gerador)
-  batch_size: 8
+  n_per_category: 20        # imagens por gerador e categoria (MVP). Aumente se houver tempo.
   prompt_style: "a realistic photograph"
 
+manual:
+  inbox: data/inbox                    # data/inbox/<gerador>/<categoria>/ (imagens baixadas)
+  prompts: data/manual/prompts.csv     # lista de prompts a usar em TODOS os geradores
+  registry: data/registry.csv          # registro de cada imagem (ferramenta, data, prompt, hash)
+
 real:
-  n_per_category: 320       # >= (nº de geradores x generation.n_per_category): 4 x 80
-  # Onde estão as reais de origem: categoria -> lista de pastas (relativas a real.source_dir)
-  source_dir: /kaggle/input/imagenet-object-localization-challenge/ILSVRC/Data/CLS-LOC/train
+  n_per_category: 60        # >= (nº de geradores x generation.n_per_category): 3 x 20
+  # Pasta local com as imagens reais, organizada por categoria: data/real_source/<categoria>/
+  # (por exemplo, recortes da ImageNet ou do COCO). Ajuste os nomes se necessário.
+  source_dir: data/real_source
   sources:
-    cat:   [n02123045, n02123159, n02123394]   # tabby, tiger cat, Persian (wnids ImageNet)
-    car:   [n04285008, n03100240, n02814533]   # sports car, convertible, beach wagon
-    horse: [n02389026]                         # sorrel
+    cat:   [cat]
 
 preprocess:
   size: 224                 # lado final (recorte central quadrado + resize)
@@ -37,7 +40,7 @@ split:
 train:
   pretrained: true
   batch_size: 32
-  num_workers: 2
+  num_workers: 0           # 0 evita erros no Windows
   phase1: {epochs: 3, lr: 1.0e-3}                 # só a camada final
   phase2: {max_epochs: 20, lr: 1.0e-4, patience: 3}  # layer4 + fc
   hflip: true
@@ -46,3 +49,11 @@ train:
 
 eval:
   bootstrap: 1000
+
+robustness:               # teste de sensibilidade (marcas d'água invisíveis, compressão etc.)
+  perturbations:
+    - {name: original, kind: none}
+    - {name: jpeg70, kind: jpeg, value: 70}
+    - {name: jpeg50, kind: jpeg, value: 50}
+    - {name: blur1, kind: blur, value: 1.0}
+    - {name: down50, kind: downscale, value: 0.5}

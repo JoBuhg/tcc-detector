@@ -22,6 +22,9 @@ def main():
 
     cfg = config.load(a.config)
     g = cfg["generators"][a.generator]
+    if g.get("kind") == "manual":
+        raise SystemExit(f"'{a.generator}' é um gerador MANUAL ({g.get('tool')}). Gere as imagens na ferramenta online, "
+                         "salve em data/inbox/<gerador>/<categoria>/ e rode: python -m tccdet.manual ingest")
     n = a.n or cfg["generation"]["n_per_category"]
     bs = cfg["generation"]["batch_size"]
     cats = a.categories or cfg["categories"]
